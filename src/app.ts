@@ -6,6 +6,7 @@ const app: Express = express();
 
 // Use Morgan for HTTP request logging
 app.use(morgan("combined"));
+
 app.use(express.json());
 app.use("/api/v1", ticketRouter);
 
