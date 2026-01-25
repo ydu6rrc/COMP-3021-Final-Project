@@ -170,3 +170,20 @@ export const urgencyCalculation = (ticket: Ticket): TicketResult => {
     urgencyLevel: urgencyLevel,
   };
 };
+
+export const createTicket = async (ticketData: {
+  title: string;
+  description: string;
+  priority: Priority;
+}): Promise<Ticket> => {
+  const newTicket: Ticket = {
+    id: tickets.length + 1,
+    title: ticketData.title,
+    description: ticketData.description,
+    priority: ticketData.priority,
+    status: Status.OPEN,
+    createdAt: Date.now().toString(),
+  };
+  tickets.push(newTicket);
+  return newTicket;
+};
