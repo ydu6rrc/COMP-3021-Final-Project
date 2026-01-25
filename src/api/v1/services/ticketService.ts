@@ -100,6 +100,17 @@ const tickets: Ticket[] = [
   },
 ];
 
-export function getAllTickets(): Ticket[] {
-  return tickets;
-}
+// change to async because it's required
+export const getAllTickets = async (): Promise<Ticket[]> => {
+  return structuredClone(tickets);
+};
+
+// TODO just test for minium gonna replace promise
+export const getTicketById = async (id: number): Promise<Ticket> => {
+  const index: number = tickets.findIndex((ticket: Ticket) => ticket.id === id);
+  if (index === -1) {
+    throw new Error(`Ticket not found`);
+  }
+  let foundIndex: Ticket = tickets[index];
+  return foundIndex;
+};

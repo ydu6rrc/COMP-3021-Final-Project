@@ -1,7 +1,7 @@
 import express, { Express } from "express";
 import morgan from "morgan";
 // TODO test will delete lately
-import { getAllTickets } from "./api/v1/services/ticketService";
+import { getAllTickets, getTicketById } from "./api/v1/services/ticketService";
 const app: Express = express();
 
 // Use Morgan for HTTP request logging
@@ -18,9 +18,15 @@ app.get("/api/v1/health", (req, res) => {
 });
 
 // TODO test will delete lately
-app.get("/api/v1/tickets", (req, res) => {
-  const data = getAllTickets();
+app.get("/api/v1/tickets", async (req, res) => {
+  const data = await getAllTickets();
   res.json(data);
 });
 
+// TODO JUST TEST
+app.get("/api/v1/tickets/:id", async (req, res) => {
+  const id = Number(req.params.id);
+  const ticket = await getTicketById(id);
+  res.json(ticket);
+});
 export default app;
