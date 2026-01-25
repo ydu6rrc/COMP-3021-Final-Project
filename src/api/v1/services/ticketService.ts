@@ -105,12 +105,68 @@ export const getAllTickets = async (): Promise<Ticket[]> => {
   return structuredClone(tickets);
 };
 
-// TODO just test for minium gonna replace promise
-export const getTicketById = async (id: number): Promise<Ticket> => {
-  const index: number = tickets.findIndex((ticket: Ticket) => ticket.id === id);
+export const getTicketById = async (id: number): Promise<TicketResult> => {
+  let index: number = tickets.findIndex((ticket: Ticket) => ticket.id === id);
   if (index === -1) {
     throw new Error(`Ticket not found`);
   }
   let foundIndex: Ticket = tickets[index];
-  return foundIndex;
+  return urgencyCalculation(foundIndex);
+};
+
+export const urgencyCalculation = (ticket: Ticket): TicketResult => {
+  // calculate the ticket age
+  let ticketAgeBySec: number =
+    Date.now() - new Date(ticket.createdAt).getTime();
+  let ticketAge: number = Math.floor(ticketAgeBySec / (1000 * 60 * 60 * 24));
+  // score
+  let score: number = 0;
+  switch (ticket.priority) {
+    case Priority.CRITICAL:
+      score = 50;
+      break;
+    case Priority.HIGH:
+      score = 30;
+      break;
+    case Priority.MEDIUM:
+      score = 20;
+      break;
+    default:
+      score = 10;
+      break;
+  }
+
+  let urgencyScore: number = 0;
+  switch (ticket.status) {
+    case Status.RESOLVED:
+      urgencyScore = 0;
+      break;
+    default:
+      urgencyScore = ticketAge * 5 + score;
+  }
+
+  let urgencyLevel: string = "";
+  switch (true) {
+    case urgencyScore === 0:
+      urgencyLevel = "Minimal. Ticket resolved.";
+      break;
+    case urgencyScore >= 80:
+      urgencyLevel = "Critical. Immediate attention required.";
+      break;
+    case urgencyScore > 50:
+      urgencyLevel = "High urgency. Prioritize resolution.";
+      break;
+    case urgencyScore >= 30:
+      urgencyLevel = "Moderate. Schedule for attention.";
+      break;
+    default:
+      urgencyLevel = "Low urgency. Address when capacity allows.";
+      break;
+  }
+  return {
+    ...ticket,
+    ticketAge: ticketAge,
+    urgencyScore: urgencyScore,
+    urgencyLevel: urgencyLevel,
+  };
 };

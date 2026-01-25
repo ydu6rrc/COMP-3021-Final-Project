@@ -29,4 +29,5 @@ app.get("/api/v1/tickets/:id", async (req, res) => {
   const ticket = await getTicketById(id);
   res.json(ticket);
 });
+
 export default app;
