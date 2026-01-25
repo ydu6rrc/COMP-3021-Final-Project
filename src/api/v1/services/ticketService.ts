@@ -41,7 +41,7 @@ const get_created_day_before = (day: number) => {
   today.setDate(today.getDate() - day);
   return today.toISOString();
 };
-const tickets: Ticket[] = [
+let tickets: Ticket[] = [
   {
     id: 1,
     title: "Update footer copyright year",
