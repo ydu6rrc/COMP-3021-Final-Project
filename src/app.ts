@@ -24,7 +24,7 @@ app.get("/api/v1/tickets", async (req, res) => {
 });
 
 // TODO JUST TEST
-app.get("/api/v1/tickets/:id", async (req, res) => {
+app.get("/api/v1/tickets/:id/urgency", async (req, res) => {
   const id = Number(req.params.id);
   const ticket = await getTicketById(id);
   res.json(ticket);
