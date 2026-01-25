@@ -187,3 +187,18 @@ export const createTicket = async (ticketData: {
   tickets.push(newTicket);
   return newTicket;
 };
+
+export const updateTicket = async (
+  id: number,
+  ticketData: Pick<Ticket, "title" | "description" | "priority">,
+): Promise<Ticket> => {
+  const index: number = tickets.findIndex((ticket: Ticket) => ticket.id === id);
+  if (index === -1) {
+    throw new Error(`Ticket with ID ${id} not found`);
+  }
+  tickets[index] = {
+    ...tickets[index],
+    ...ticketData,
+  };
+  return structuredClone(tickets[index]);
+};
