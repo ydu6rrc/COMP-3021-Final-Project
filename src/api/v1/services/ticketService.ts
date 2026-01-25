@@ -202,3 +202,13 @@ export const updateTicket = async (
   };
   return structuredClone(tickets[index]);
 };
+
+export const deleteTicket = async (id: number): Promise<void> => {
+  for (let i = 0; i < tickets.length; i++) {
+    if (tickets[i].id === id) {
+      tickets.splice(i, 1);
+      break;
+    }
+  }
+  return;
+};
