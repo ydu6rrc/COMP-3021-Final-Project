@@ -1,54 +1,24 @@
-import {ticketDataSample} from "../../../data/ticketData"
+import {
+  Ticket,
+  Priority,
+  Status,
+  ticketDataSample,
+  TicketResult,
+} from "../../../data/ticketData";
 
-// Enum for Priority to meet the assignment requirement
-export enum Priority {
-  LOW = "low",
-  MEDIUM = "medium",
-  HIGH = "high",
-  CRITICAL = "critical",
-}
-
-// Also for the status but idk really it's nessary
-export enum Status {
-  OPEN = "open",
-  RESOLVED = "resolved",
-  IN_PROGRESS = "in-progress",
-}
-
-// Interface for the ticket
-export interface Ticket {
-  id: number;
-  title: string;
-  description: string;
-  priority: Priority;
-  status: Status;
-  createdAt: string;
-}
-
-//  Ticket interface for the result
-export interface TicketResult {
-  id: number;
-  title: string;
-  description: string;
-  priority: Priority;
-  status: Status;
-  createdAt: string;
-  ticketAge: number;
-  urgencyScore: number;
-  urgencyLevel: string;
-}
-
-let tickets: Ticket[] = [...ticketDataSample]
+let tickets: Ticket[] = [...ticketDataSample];
 
 // change to async because it's required
 export const getAllTickets = async (): Promise<Ticket[]> => {
   return structuredClone(tickets);
 };
 
-export const getTicketById = async (id: number): Promise<TicketResult> => {
+export const getTicketById = async (
+  id: number,
+): Promise<TicketResult | undefined> => {
   let index: number = tickets.findIndex((ticket: Ticket) => ticket.id === id);
   if (index === -1) {
-    throw new Error(`Ticket not found`);
+    return undefined;
   }
   let foundIndex: Ticket = tickets[index];
   return urgencyCalculation(foundIndex);
