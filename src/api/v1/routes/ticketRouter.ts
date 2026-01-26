@@ -4,6 +4,7 @@ import {
   getAllTickets,
   getTicketById,
   createTicket,
+  updateTicket,
 } from "../controllers/ticketController";
 
 const router = Router();
@@ -16,8 +17,8 @@ router.post("/tickets/", async (req: Request, res: Response) => {
   await createTicket(req, res);
 });
 
-router.put("/tickets/", async (req: Request, res: Response) => {
-  await createTicket(req, res);
+router.put("/tickets/:id", async (req: Request, res: Response) => {
+  await updateTicket(req, res);
 });
 
 router.get("/tickets/:id/urgency", async (req: Request, res: Response) => {
