@@ -30,6 +30,8 @@ export const getTicketById = async (
       await ticketService.getTicketById(id);
     if (!ticket) {
       res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Ticket not found." });
+      // gonna need return otherwise the status is 200 not 404
+      return;
     }
     res.status(HTTP_STATUS.OK).json(ticket);
   } catch (error) {
