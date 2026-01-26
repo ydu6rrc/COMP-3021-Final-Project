@@ -90,3 +90,55 @@ export const createTicket = async (
       .json({ message: "Internal Server Error" });
   }
 };
+
+export const updateTicket = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const id: number = Number(req.params.id);
+    const {
+      priority,
+      status,
+    }: {
+      priority?: string;
+      status?: string;
+    } = req.body;
+    if (priority) {
+      if (
+        !["critical", "high", "medium", "low"].includes(priority.toLowerCase())
+      ) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          message:
+            "Invalid priority. Must be one of: critical, high, medium, low",
+        });
+        return;
+      }
+    }
+    if (status) {
+      if (!["open", "in-progress", "resolved"].includes(status.toLowerCase())) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+          message:
+            "Invalid status. Must be one of: open, in-progress, resolved",
+        });
+        return;
+      }
+    }
+    const updateData = {
+      priority: ticketData.Priority,
+      status: ticketData.Status,
+    };
+    const updatedTicket = await ticketService.updateTicket(id, updateData);
+    if (!updatedTicket) {
+      res.status(HTTP_STATUS.NOT_FOUND).json({
+        message: "Ticket not found",
+      });
+    } else {
+      res.status(HTTP_STATUS.OK).json(updatedTicket);
+    }
+  } catch (error) {
+    res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+      message: "Internal Server Error",
+    });
+  }
+};

@@ -100,7 +100,10 @@ export const createTicket = async (ticketData: {
 
 export const updateTicket = async (
   id: number,
-  ticketData: Pick<Ticket, "title" | "description" | "priority">,
+  ticketData: {
+    priority?: Priority;
+    status?: Status;
+  },
 ): Promise<Ticket | undefined> => {
   const index: number = tickets.findIndex((ticket: Ticket) => ticket.id === id);
   if (index === -1) {
