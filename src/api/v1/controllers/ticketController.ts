@@ -40,3 +40,53 @@ export const getTicketById = async (
       .json({ message: "Internal Server Error" });
   }
 };
+
+export const createTicket = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const {
+      title,
+      description,
+      priority,
+    }: {
+      title: string | undefined;
+      description: string | undefined;
+      priority: string | undefined;
+    } = req.body;
+    if (!title) {
+      res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .json({ message: "Missing required field: title" });
+      return;
+    }
+    if (!description) {
+      res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .json({ message: "Missing required field: description" });
+      return;
+    }
+    if (
+      !priority ||
+      !["critical", "high", "medium", "low"].includes(priority.toLowerCase())
+    ) {
+      res.status(HTTP_STATUS.BAD_REQUEST).json({
+        message:
+          "Invalid priority. Must be one of: critical, high, medium, low",
+      });
+      return;
+    }
+    const newTicket = {
+      title,
+      description,
+      priority: priority.toLocaleLowerCase() as ticketData.Priority,
+    };
+    const theNewTicket = await ticketService.createTicket(newTicket);
+    res.status(HTTP_STATUS.CREATED).json(theNewTicket);
+  } catch (error) {
+    res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .json({ message: "Internal Server Error" });
+  }
+};
