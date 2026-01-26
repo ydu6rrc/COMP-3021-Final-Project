@@ -12,4 +12,5 @@ router.get("/tickets/:id/urgency", async (req: Request, res: Response) => {
   await getTicketById(req, res);
 });
 
+
 export default router;

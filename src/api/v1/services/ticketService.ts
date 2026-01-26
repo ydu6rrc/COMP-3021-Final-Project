@@ -92,7 +92,7 @@ export const createTicket = async (ticketData: {
     description: ticketData.description,
     priority: ticketData.priority,
     status: Status.OPEN,
-    createdAt: Date.now().toString(),
+    createdAt: new Date().toISOString(),
   };
   tickets.push(newTicket);
   return newTicket;
@@ -101,10 +101,10 @@ export const createTicket = async (ticketData: {
 export const updateTicket = async (
   id: number,
   ticketData: Pick<Ticket, "title" | "description" | "priority">,
-): Promise<Ticket> => {
+): Promise<Ticket | undefined> => {
   const index: number = tickets.findIndex((ticket: Ticket) => ticket.id === id);
   if (index === -1) {
-    throw new Error(`Ticket with ID ${id} not found`);
+    return undefined;
   }
   tickets[index] = {
     ...tickets[index],
