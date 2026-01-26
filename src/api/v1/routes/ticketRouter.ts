@@ -5,6 +5,7 @@ import {
   getTicketById,
   createTicket,
   updateTicket,
+  deleteTicket,
 } from "../controllers/ticketController";
 
 const router = Router();
@@ -19,6 +20,10 @@ router.post("/tickets/", async (req: Request, res: Response) => {
 
 router.put("/tickets/:id", async (req: Request, res: Response) => {
   await updateTicket(req, res);
+});
+
+router.delete("/tickets/:id", async (req: Request, res: Response) => {
+  await deleteTicket(req, res);
 });
 
 router.get("/tickets/:id/urgency", async (req: Request, res: Response) => {

@@ -141,3 +141,25 @@ export const updateTicket = async (
     });
   }
 };
+
+export const deleteTicket = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const id: number = Number(req.params.id);
+    const findTicket = await ticketService.getTicketById(id);
+    if (!findTicket) {
+      res.status(HTTP_STATUS.NOT_FOUND).json({
+        message: "Ticket not found",
+      });
+      return;
+    }
+    await ticketService.deleteTicket(id);
+    res.status(HTTP_STATUS.OK).json({ message: "Delete success" });
+  } catch (error) {
+    res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+      message: "Internal Server Error",
+    });
+  }
+};
