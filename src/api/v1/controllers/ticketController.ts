@@ -97,13 +97,7 @@ export const updateTicket = async (
 ): Promise<void> => {
   try {
     const id: number = Number(req.params.id);
-    const {
-      priority,
-      status,
-    }: {
-      priority?: string;
-      status?: string;
-    } = req.body;
+    const { priority, status } = req.body;
     if (priority) {
       if (
         !["critical", "high", "medium", "low"].includes(priority.toLowerCase())
@@ -124,11 +118,16 @@ export const updateTicket = async (
         return;
       }
     }
-    const updateData = {
-      priority: ticketData.Priority,
-      status: ticketData.Status,
-    };
-    const updatedTicket = await ticketService.updateTicket(id, updateData);
+    //  To block errors
+    const updateNew: any = {};
+
+    if (priority) {
+      updateNew.priority = priority.toLowerCase();
+    }
+    if (status) {
+      updateNew.status = status.toLowerCase();
+    }
+    const updatedTicket = await ticketService.updateTicket(id, updateNew);
     if (!updatedTicket) {
       res.status(HTTP_STATUS.NOT_FOUND).json({
         message: "Ticket not found",

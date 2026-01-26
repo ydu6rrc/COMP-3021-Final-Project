@@ -16,6 +16,10 @@ router.post("/tickets/", async (req: Request, res: Response) => {
   await createTicket(req, res);
 });
 
+router.put("/tickets/", async (req: Request, res: Response) => {
+  await createTicket(req, res);
+});
+
 router.get("/tickets/:id/urgency", async (req: Request, res: Response) => {
   await getTicketById(req, res);
 });
