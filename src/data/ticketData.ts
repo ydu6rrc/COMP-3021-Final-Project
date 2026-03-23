@@ -38,7 +38,7 @@ export interface TicketResult {
 }
 
 const get_created_day_before = (day: number) => {
-  let today = new Date();
+  const today = new Date();
   today.setDate(today.getDate() - day);
   return today.toISOString();
 };
