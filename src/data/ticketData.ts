@@ -3,6 +3,7 @@ export enum Priority {
   LOW = "low",
   MEDIUM = "medium",
   HIGH = "high",
+  URGENT = "urgent",
   CRITICAL = "critical",
 }
 
@@ -79,7 +80,7 @@ export const ticketDataSample: Ticket[] = [
     id: 5,
     title: "Export to PDF not working",
     description: "PDF export fails silently",
-    priority: Priority.HIGH,
+    priority: Priority.URGENT,
     status: Status.OPEN,
     createdAt: get_created_day_before(9),
   },

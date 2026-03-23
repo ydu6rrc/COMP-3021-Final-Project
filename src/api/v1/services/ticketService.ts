@@ -35,6 +35,9 @@ export const urgencyCalculation = (ticket: Ticket): TicketResult => {
     case Priority.CRITICAL:
       score = 50;
       break;
+    case Priority.URGENT:
+      score = 40;
+      break;
     case Priority.HIGH:
       score = 30;
       break;
@@ -124,4 +127,67 @@ export const deleteTicket = async (id: number): Promise<void> => {
     }
   }
   return;
+};
+
+// updating an event
+export const updateEvent = async (
+  id: string,
+  eventData: any,
+): Promise<Event | null> => {
+  try {
+    let existingDoc = await firestoreRepository.getDocumentById(COLLECTION, id);
+    if (existingDoc === null) {
+      return null;
+    }
+
+    let updatedFields: any = {};
+    if (eventData.name !== undefined) updatedFields.name = eventData.name;
+    if (eventData.date !== undefined)
+      updatedFields.date = new Date(eventData.date).toISOString();
+    if (eventData.capacity !== undefined)
+      updatedFields.capacity = eventData.capacity;
+    if (eventData.registrationCount !== undefined)
+      updatedFields.registrationCount = eventData.registrationCount;
+    if (eventData.status !== undefined) updatedFields.status = eventData.status;
+    if (eventData.category !== undefined)
+      updatedFields.category = eventData.category;
+
+    if (Object.keys(updatedFields).length === 0) {
+      throw new Error("No fields provided to update");
+    }
+    updatedFields.updatedAt = new Date().toISOString();
+
+    await firestoreRepository.updateDocument<Event>(
+      COLLECTION,
+      id,
+      updatedFields,
+    );
+
+    let updatedDoc = await firestoreRepository.getDocumentById(COLLECTION, id);
+    if (updatedDoc === null) return null;
+
+    let data = updatedDoc.data() as Event;
+    return {
+      ...data,
+      id: updatedDoc.id,
+    };
+  } catch (error: unknown) {
+    let errorMessage = error instanceof Error ? error.message : "Unknown error";
+    throw new Error(`Failed to update event ${id}: ${errorMessage}`);
+  }
+};
+
+// deleting an event
+export const deleteEvent = async (id: string): Promise<boolean> => {
+  try {
+    let doc = await firestoreRepository.getDocumentById(COLLECTION, id);
+    if (doc === null) {
+      return false;
+    }
+    await firestoreRepository.deleteDocument(COLLECTION, id);
+    return true;
+  } catch (error: unknown) {
+    let errorMessage = error instanceof Error ? error.message : "Unknown error";
+    throw new Error(`Failed to delete the event: ${errorMessage}`);
+  }
 };
